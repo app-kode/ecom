@@ -93,7 +93,7 @@
                     <!--                    </args>-->
                     <compilerPlugins>
                         <plugin>spring</plugin>
-                        <plugin>jpa</plugin>
+<!--                        <plugin>jpa</plugin>-->
                     </compilerPlugins>
                     <jvmTarget>11</jvmTarget>
                 </configuration>
