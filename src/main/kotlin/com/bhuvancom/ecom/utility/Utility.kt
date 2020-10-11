@@ -1,11 +1,5 @@
 package com.bhuvancom.ecom.utility
 
-import org.apache.tomcat.jni.User.username
-import org.springframework.context.annotation.Bean
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.jdbc.datasource.DriverManagerDataSource
-import javax.sql.DataSource
-
 
 class Utility {
 
