@@ -22,4 +22,16 @@ class OfferService(private val offerRepository: OfferRepository) {
             ResponseEntity<Unit>(HttpStatus.ACCEPTED)
         }.orElse(ResponseEntity.notFound().build())
     }
+
+    fun getAllActiveOffers(): ResponseEntity<MutableList<Offers>> {
+        return ResponseEntity.ok(offerRepository.findAllActiveOffers())
+    }
+
+    fun getAllOffers(): ResponseEntity<MutableList<Offers>> {
+        return ResponseEntity.ok(offerRepository.findAll())
+    }
+
+    fun getOfferByCategoryId(categoryId: Int) {
+        offerRepository.findAllByCategoriesCategory(categoryId)
+    }
 }

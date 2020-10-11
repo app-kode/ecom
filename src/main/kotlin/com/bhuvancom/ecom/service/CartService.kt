@@ -22,13 +22,20 @@ class CartService(private val cartRepository: CartRepository) {
         ResponseEntity<Unit>(HttpStatus.ACCEPTED)
     }.orElse(ResponseEntity.notFound().build())
 
-    fun removeProductFromCart(userId: Int, productId: Int): ResponseEntity<Unit> =
-            cartRepository.findTopCartByUserId(userId).map { cart ->
+    fun removeProductFromCart(cartId: Int, productId: Int): ResponseEntity<Unit> =
+            cartRepository.findById(cartId).map { cart ->
                 cart.cartProducts.remove(cart.cartProducts.find { it.id == productId })
                 cartRepository.save(cart)
                 ResponseEntity<Unit>(HttpStatus.ACCEPTED)
-
             }.orElse(ResponseEntity.notFound().build())
+
+    fun saveCart(cart: Cart): ResponseEntity<Cart> {
+        return ResponseEntity.accepted().body(cartRepository.save(cart))
+    }
+
+    fun findAllCart(): ResponseEntity<MutableList<Cart>> {
+        return ResponseEntity.ok(cartRepository.findAll())
+    }
 
 
 }

@@ -29,4 +29,8 @@ class OrderService(private val ordersRepository: OrdersRepository) {
     fun getOrderByStatusOfUser(status: String, userId: Int): ResponseEntity<MutableList<Order>> {
         return ResponseEntity.ok(ordersRepository.findAllByStatusAndUserId(status, userId))
     }
+
+    fun saveOrder(order: Order): ResponseEntity<Order> {
+        return ResponseEntity.accepted().body(ordersRepository.save(order))
+    }
 }
