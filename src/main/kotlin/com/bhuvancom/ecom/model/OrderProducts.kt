@@ -8,12 +8,12 @@ data class OrderProducts(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id", unique = true, nullable = false)
-        var id: Int,
+        var id: Int? = null,
 
         @Column(name = "quantity")
-        var quantity: Int = -1,
+        var quantity: Int = 1,
 
-        @OneToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "product_id")
+        @OneToOne(fetch = FetchType.LAZY,optional = false)
+        @JoinColumns(JoinColumn(name = "product_id", referencedColumnName = "id",nullable = false))
         var product: Product? = null
 )

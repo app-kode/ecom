@@ -10,6 +10,6 @@ data class ProductDescription(
         @Column(name = "id", unique = true, nullable = false)
         var id: Int? = null,
 
-        @Column(name = "description")
+        @Column(name = "description",nullable = false)
         var description: String = ""
 )

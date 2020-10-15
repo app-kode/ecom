@@ -6,12 +6,13 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@CrossOrigin
 @RequestMapping("/offers")
 class OfferController(private val offerService: OfferService) {
 
     @GetMapping("/active")
-    fun getAllActiveOffers(): ResponseEntity<MutableList<Offers>> {
-        return offerService.getAllActiveOffers()
+    fun getAllActiveOffers(@RequestParam(name = "page", defaultValue = "1") page: Int = 1): ResponseEntity<HashMap<String, Any>> {
+        return offerService.getAllActiveOffers(pageNumber = page)
     }
 
     @GetMapping("/{id}")
@@ -20,18 +21,19 @@ class OfferController(private val offerService: OfferService) {
     }
 
     @GetMapping("/category/{categoryId}")
-    fun getOfferOfCategory(@PathVariable categoryId: Int) {
-        return offerService.getOfferByCategoryId(categoryId)
+    fun getOfferOfCategory(@PathVariable categoryId: Int, @RequestParam(name = "page", defaultValue = "1") page: Int = 1): ResponseEntity<HashMap<String, Any>> {
+        return offerService.getOfferByCategoryId(categoryId, pageNumber = page)
     }
 
     @GetMapping("/all")
-    fun getAllOffers(): ResponseEntity<MutableList<Offers>> {
-        return offerService.getAllOffers()
+    fun getAllOffers(@RequestParam(name = "page", defaultValue = "1") page: Int = 1)
+            : ResponseEntity<HashMap<String, Any>> {
+        return offerService.getAllOffers(pageNumber = page)
     }
 
 
     @PostMapping("/save")
-    fun saveOffer(offers: Offers): ResponseEntity<Offers> {
+    fun saveOffer(@RequestBody offers: Offers): ResponseEntity<Offers> {
         return offerService.addOffer(offers)
     }
 

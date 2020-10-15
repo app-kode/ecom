@@ -10,6 +10,6 @@ data class AdditionalImages(
         @Column(name = "id", unique = true, nullable = false)
         var id: Int? = null,
 
-        @Column(name = "img_url")
+        @Column(name = "img_url",nullable = false)
         var imgUrl: String = ""
 )

@@ -11,14 +11,14 @@ data class ProductFullDetails(
         var id: Int? = null,
 
         @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-        @JoinColumn(name = "full_description_id", referencedColumnName = "id")
+        @JoinColumns(JoinColumn(name = "full_description_id", referencedColumnName = "id"))
         val descriptions: MutableList<ProductDescription> = mutableListOf(),
 
-        @OneToMany( fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-        @JoinColumn(name = "full_description_id", referencedColumnName = "id")
+        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        @JoinColumns(JoinColumn(name = "full_description_id", referencedColumnName = "id"))
         val images: MutableList<AdditionalImages> = mutableListOf(),
 
-        @Column(name = "details")
+        @Column(name = "details",nullable = false)
         var details: String = ""
 
 

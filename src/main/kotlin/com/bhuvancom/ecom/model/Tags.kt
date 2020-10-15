@@ -10,7 +10,7 @@ data class Tags(
         @Column(name = "id", unique = true, nullable = false)
         var id: Int? = null,
 
-        @Column(name = "tag_name")
+        @Column(name = "tag_name", nullable = false)
         var tag: String = ""
 
 //        @ManyToMany(fetch = FetchType.LAZY,mappedBy = "tags")

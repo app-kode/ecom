@@ -6,17 +6,18 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@CrossOrigin
 @RequestMapping("/order")
 class OrderController(private val orderService: OrderService) {
 
     @PostMapping("/save")
-    fun saveOrder(order: Order): ResponseEntity<Order> {
+    fun saveOrder(@RequestBody order: Order): ResponseEntity<Order> {
         return orderService.saveOrder(order)
     }
 
     @GetMapping("/user/{userId}")
-    fun allOrders(@PathVariable userId: Int): ResponseEntity<MutableList<Order>> {
-        return orderService.getOrdersOfUser(userId)
+    fun allOrders(@PathVariable userId: Int, @RequestParam(name = "page", defaultValue = "1") page: Int = 1): ResponseEntity<HashMap<String, Any>> {
+        return orderService.getOrdersOfUser(userId,page)
     }
 
     @GetMapping("/all")
@@ -26,7 +27,7 @@ class OrderController(private val orderService: OrderService) {
 
     @GetMapping("/{id}")
     fun order(@PathVariable id: Int): ResponseEntity<Order> {
-     return orderService.getOrderById(id)
+        return orderService.getOrderById(id)
     }
 
 

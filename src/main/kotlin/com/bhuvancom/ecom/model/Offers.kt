@@ -13,18 +13,14 @@ data class Offers(
         @Column(name = "is_active")
         var isActive: Boolean = false,
 
-        @Column(name = "description")
+        @Column(name = "description", nullable = false)
         var descriptionTitle: String = "",
 
         @Column(name = "sub_title")
         var subTitle: String = "",
 
-//        @ManyToMany(fetch = FetchType.LAZY)
-//        @JoinTable(name = "offer_category")
-//        val categories: MutableList<Category> = mutableListOf(),
-
-        @OneToMany(fetch = FetchType.EAGER)
-        @JoinColumn(name = "offer_id")
+        @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+        @JoinColumns(JoinColumn(name = "offer_id", referencedColumnName = "id", nullable = false))
         val categories: MutableList<OffersCategory> = mutableListOf(),
 
         @Column(name = "img_url")

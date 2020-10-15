@@ -10,10 +10,10 @@ data class CartProducts(
         @Column(name = "id", unique = true, nullable = false)
         var id: Int? = null,
 
-        @OneToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "product_id")
+        @OneToOne(fetch = FetchType.LAZY,optional = false)
+        @JoinColumns(JoinColumn(name = "product_id",referencedColumnName = "id",nullable = false))
         var product: Product? = null,
 
         @Column(name = "quantity")
-        var quantity: Int = 0
+        var quantity: Int = 1
 )

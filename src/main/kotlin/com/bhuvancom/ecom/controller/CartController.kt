@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/cart")
+@CrossOrigin
 class CartController(private val cartService: CartService) {
 
     @GetMapping("/{userId}")
@@ -15,7 +16,7 @@ class CartController(private val cartService: CartService) {
     }
 
     @PostMapping("/save")
-    fun saveCart(cart: Cart): ResponseEntity<Cart> {
+    fun saveCart(@RequestBody cart: Cart): ResponseEntity<Cart> {
         return cartService.saveCart(cart)
     }
 
@@ -31,8 +32,8 @@ class CartController(private val cartService: CartService) {
     }
 
     @GetMapping("/all")
-    fun getAllCart(): ResponseEntity<MutableList<Cart>> {
-        return cartService.findAllCart()
+    fun getAllCart(@RequestParam(name = "page",defaultValue = "1") page:Int): ResponseEntity<HashMap<String, Any>> {
+        return cartService.findAllCart(page)
     }
 
 }

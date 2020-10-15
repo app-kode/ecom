@@ -10,7 +10,7 @@ data class Product(
         @Column(name = "id", unique = true, nullable = false)
         var id: Int? = null,
 
-        @Column(name = "info")
+        @Column(name = "info", nullable = false)
         var info: String = "",
 
         //@OrderBy
@@ -21,22 +21,22 @@ data class Product(
         var isActive: Boolean = true,
 
         @OneToOne(fetch = FetchType.LAZY, optional = false)
-        @JoinColumn(name = "category_id", referencedColumnName = "id")
+        @JoinColumns(JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false))
         var category: Category? = null,
 
         @Column(name = "img_url")
         var imgUrl: String = "",
 
-        @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-        @JoinTable(name = "product_tags")
-        val tags: MutableList<Tags> = mutableListOf(),
+        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        @JoinColumns(JoinColumn(name = "product_id", referencedColumnName = "id"))
+        val tags: MutableList<ProductTag> = mutableListOf(),
 
-        @OneToOne(fetch = FetchType.EAGER, optional = false)
-        @JoinColumn(name = "owner_id")
+        @OneToOne(fetch = FetchType.LAZY, optional = false)
+        @JoinColumns(JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false))
         var owner: User? = null,
 
-        @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-        @JoinColumn(name = "product_full_description", referencedColumnName = "id")
+        @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], optional = true)
+        @JoinColumns(JoinColumn(name = "product_full_description", referencedColumnName = "id", nullable = true))
         var productDescription: ProductFullDetails? = null
 
 

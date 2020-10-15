@@ -8,11 +8,14 @@ data class Category(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id", unique = true, nullable = false)
-        var id: Int,
+        var id: Int? = null,
 
-        @Column(name = "category_name")
+        @Column(name = "category_name",nullable = false)
         var categoryName: String = "",
 
         @Column(name = "discount")
-        var discount: Double = 0.0
+        var discount: Double = 0.0,
+
+        @Column(name = "imgUrl")
+        var imgUrl: String = ""
 )
