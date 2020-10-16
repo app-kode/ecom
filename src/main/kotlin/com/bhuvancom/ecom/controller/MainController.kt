@@ -27,5 +27,10 @@ class MainController {
         return ResponseEntity(ResponseResource("Working", "success"), HttpStatus.OK)
     }
 
+//    @GetMapping("/logout")
+//    fun logout() {
+//
+//    }
+
     //@GetMapping("/tag")
 }

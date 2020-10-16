@@ -20,7 +20,7 @@ data class Product(
         @Column(name = "is_active")
         var isActive: Boolean = true,
 
-        @OneToOne(fetch = FetchType.LAZY, optional = false)
+        @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumns(JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false))
         var category: Category? = null,
 
@@ -31,7 +31,7 @@ data class Product(
         @JoinColumns(JoinColumn(name = "product_id", referencedColumnName = "id"))
         val tags: MutableList<ProductTag> = mutableListOf(),
 
-        @OneToOne(fetch = FetchType.LAZY, optional = false)
+        @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumns(JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false))
         var owner: User? = null,
 

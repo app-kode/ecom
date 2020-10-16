@@ -13,7 +13,7 @@ data class OrderProducts(
         @Column(name = "quantity")
         var quantity: Int = 1,
 
-        @OneToOne(fetch = FetchType.LAZY,optional = false)
+        @ManyToOne(fetch = FetchType.LAZY,optional = false)
         @JoinColumns(JoinColumn(name = "product_id", referencedColumnName = "id",nullable = false))
         var product: Product? = null
 )

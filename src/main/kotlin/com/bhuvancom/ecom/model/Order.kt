@@ -10,7 +10,7 @@ data class Order(
         @Column(name = "id", unique = true, nullable = false)
         var id: Int? = null,
 
-        @OneToOne(fetch = FetchType.EAGER, optional = false)
+        @ManyToOne(fetch = FetchType.EAGER, optional = false)
         @JoinColumns(JoinColumn(name = "user_id", referencedColumnName = "id"))
         val user: User? = null,
 

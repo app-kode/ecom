@@ -26,9 +26,10 @@ class UsersController(private val userService: UserService) {
 
     @PostMapping("/save")
     fun addUser(@RequestBody user: User): ResponseEntity<User> {
+        logger.info("incoming user $user")
         val saveUser = userService.saveUser(user)
         logger.info("user saved $saveUser")
-        return ResponseEntity.ok(saveUser)
+        return userService.saveUser(user)
     }
 
     @GetMapping("/search")

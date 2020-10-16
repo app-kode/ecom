@@ -10,7 +10,7 @@ data class OffersCategory(
         @Column(name = "id")
         var offerCategoryId: Int? = null,
 
-        @OneToOne(fetch = FetchType.LAZY,optional = false)
+        @ManyToOne(fetch = FetchType.LAZY,optional = false)
         @JoinColumns(JoinColumn(name = "category_id", referencedColumnName = "id",nullable = false))
         var category: Category? = null
 )

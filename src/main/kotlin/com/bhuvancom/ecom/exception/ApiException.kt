@@ -3,23 +3,23 @@ package com.bhuvancom.ecom.exception
 import org.springframework.http.HttpStatus
 import java.util.*
 
-class ApiException {
+class ApiException : Exception {
 
     val httpStatus: HttpStatus
-    val message: String
+    val messages: String
     val errors: MutableList<String>
 
     constructor(httpStatus: HttpStatus,
                 message: String,
                 errors: MutableList<String> = mutableListOf()) {
-        this.message = message
+        this.messages = message
         this.httpStatus = httpStatus
         this.errors = errors
     }
 
-    constructor(httpStatus: HttpStatus, message: String, error: String) {
+    constructor(httpStatus: HttpStatus, message: String = "", error: String) {
         this.errors = Arrays.asList(error)
         this.httpStatus = httpStatus
-        this.message = message
+        this.messages = message
     }
 }
