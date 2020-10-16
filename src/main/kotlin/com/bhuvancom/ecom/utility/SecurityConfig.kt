@@ -37,13 +37,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         http.logout().disable()
         http.httpBasic { it ->
             it.realmName("e-com")
-            it.authenticationDetailsSource { dd ->
-                logger.info("${dd.authType} and ${dd.queryString} ${dd.method}")
-                dd.headerNames.asIterator().forEach {
-                    logger.info("$it -> ${dd.getHeader(it)}")
-                }
-                logger.info("remote user " + dd.remoteUser)
-            }
         }
         http.authorizeRequests().antMatchers(
                 "/",
