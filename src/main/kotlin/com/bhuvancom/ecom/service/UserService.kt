@@ -4,9 +4,9 @@ import com.bhuvancom.ecom.model.User
 import com.bhuvancom.ecom.model.UserRole
 import com.bhuvancom.ecom.repository.UserRepository
 import com.bhuvancom.ecom.utility.PagedData
+import com.bhuvancom.ecom.utility.Utility
 import com.bhuvancom.ecom.utility.Utility.Companion.PAGE_SIZE
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Bean
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.logging.Logger
+import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
 
 
 @Service
@@ -29,12 +31,16 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
         return BCryptPasswordEncoder()
     }
 
+    @PersistenceContext
+    private lateinit var session: EntityManager
+
 
     val logger = Logger.getLogger(this::class.java.name)
 
     fun getAllActiveUser(pageNumber: Int): ResponseEntity<HashMap<String, Any>> {
         val page = PageRequest.of(pageNumber - 1, PAGE_SIZE)
-        return ResponseEntity.ok(PagedData.getPagedData(userRepository.getAllByIsActive(true, page) as Page<Any>))
+        return ResponseEntity.ok(PagedData
+                .getPagedData(userRepository.getAllByIsActive(true, page) as Page<Any>))
     }
 
     fun getAllUsers(pageNumber: Int): ResponseEntity<HashMap<String, Any>> {
@@ -43,8 +49,41 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
     }
 
     fun saveUser(user: User): ResponseEntity<User> {
-        user.userPassword = passwordEncrypt().encode(user.userPassword)
-        return ResponseEntity.accepted().body(userRepository.save(user))
+        return if (user.id != null) {
+            val builder = session.criteriaBuilder
+            val criteriaUpdate = builder.createCriteriaUpdate(User::class.java)
+            val root = criteriaUpdate.from(User::class.java)
+
+            if (Utility.isNotNullOrEmpty(user.address))
+                criteriaUpdate.set(root.get("address"), user.address)
+
+            if (Utility.isNotNullOrEmpty(user.email))
+                criteriaUpdate.set(root.get("email"), user.email)
+
+            if (Utility.isNotNullOrEmpty(user.name))
+                criteriaUpdate.set(root.get("name"), user.name)
+
+            if (Utility.isNotNullOrEmpty(user.phone))
+                criteriaUpdate.set(root.get("phone"), user.phone)
+
+            if (Utility.isNotNullOrEmpty(user.userPassword)) {
+                logger.info("brfore hash ${user.userPassword}")
+                user.userPassword = passwordEncrypt().encode(user.userPassword)
+                criteriaUpdate.set(root.get("userPassword"), user.userPassword)
+                logger.info("after hash ${user.userPassword}")
+            }
+
+            criteriaUpdate.set(root.get("isActive"), user.isActive)
+
+
+            val equal = builder.equal(root.get<Int>("id"), user.id!!)
+            criteriaUpdate.where(equal)
+            session.createQuery(criteriaUpdate).executeUpdate()
+            ResponseEntity.accepted().body(userRepository.getOne(user.id!!))
+        } else {
+            user.userPassword = passwordEncrypt().encode(user.userPassword)
+            ResponseEntity.accepted().body(userRepository.save(user))
+        }
     }
 
     fun findAllUserByName(name: String, pageNumber: Int = 1): ResponseEntity<HashMap<String, Any>> {
@@ -54,8 +93,7 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
 
     override fun loadUserByUsername(email: String): UserDetails {
         logger.info("checking for $email")
-        //val encode = passwordEncoder.encode("1234")
-        //logger.info("1234 hash is $encode")
+
         val user = userRepository.findByEmail(email)
         if (user == null) {
             logger.info("error user not found")

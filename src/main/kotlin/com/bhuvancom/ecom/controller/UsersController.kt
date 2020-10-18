@@ -29,7 +29,7 @@ class UsersController(private val userService: UserService) {
         logger.info("incoming user $user")
         val saveUser = userService.saveUser(user)
         logger.info("user saved $saveUser")
-        return userService.saveUser(user)
+        return saveUser
     }
 
     @GetMapping("/search")
