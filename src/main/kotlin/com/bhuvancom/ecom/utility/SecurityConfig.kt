@@ -43,6 +43,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 "/category/all",
                 "/product/all",
                 "/offers/all",
+                "/user/roles",
                 "/logout",
                 "/offers/category/***").permitAll()
                 .and()

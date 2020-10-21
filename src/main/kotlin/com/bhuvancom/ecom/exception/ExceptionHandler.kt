@@ -51,7 +51,11 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(Exception::class)
     @ResponseBody
     fun handleAll(ex: Exception, request: WebRequest): ResponseEntity<Any> {
-        val apiException = ApiException(HttpStatus.INTERNAL_SERVER_ERROR, ex.localizedMessage, "Error Occurred")
+        var msg = ""
+        ex.cause?.message?.let {
+            msg = it
+        }
+        val apiException = ApiException(HttpStatus.INTERNAL_SERVER_ERROR, msg, "Error Occurred")
         return ResponseEntity(apiException, HttpHeaders(), apiException.httpStatus)
     }
 }

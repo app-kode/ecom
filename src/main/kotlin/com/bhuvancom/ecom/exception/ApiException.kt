@@ -3,7 +3,7 @@ package com.bhuvancom.ecom.exception
 import org.springframework.http.HttpStatus
 import java.util.*
 
-class ApiException : Exception {
+class ApiException {
 
     val httpStatus: HttpStatus
     val messages: String

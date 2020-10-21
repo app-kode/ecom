@@ -27,6 +27,12 @@ class MainController {
         return ResponseEntity(ResponseResource("Working", "success"), HttpStatus.OK)
     }
 
+    @GetMapping("/test")
+    fun test(): ResponseEntity<ResponseResource<String>> {
+        return ResponseEntity(ResponseResource("Working", "success"), HttpStatus.OK)
+    }
+
+
 //    @GetMapping("/logout")
 //    fun logout() {
 //

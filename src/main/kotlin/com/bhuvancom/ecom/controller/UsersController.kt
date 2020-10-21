@@ -1,6 +1,7 @@
 package com.bhuvancom.ecom.controller
 
 import com.bhuvancom.ecom.model.User
+import com.bhuvancom.ecom.model.UserRole
 import com.bhuvancom.ecom.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -37,5 +38,15 @@ class UsersController(private val userService: UserService) {
                        @RequestParam(name = "page", defaultValue = "1") page: Int = 1)
             : ResponseEntity<HashMap<String, Any>> {
         return userService.findAllUserByName(name, page)
+    }
+
+    @GetMapping("/login")
+    fun login(@RequestParam("email") userEmail: String = ""): ResponseEntity<User> {
+        return ResponseEntity.ok().body(userService.findByEmail(userEmail))
+    }
+
+    @GetMapping("/roles")
+    fun getRoles(): ResponseEntity<MutableList<UserRole>> {
+        return userService.getAllRoles()
     }
 }

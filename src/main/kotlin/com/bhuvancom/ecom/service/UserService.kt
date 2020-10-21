@@ -2,6 +2,7 @@ package com.bhuvancom.ecom.service
 
 import com.bhuvancom.ecom.model.User
 import com.bhuvancom.ecom.model.UserRole
+import com.bhuvancom.ecom.repository.RoleRepository
 import com.bhuvancom.ecom.repository.UserRepository
 import com.bhuvancom.ecom.utility.PagedData
 import com.bhuvancom.ecom.utility.Utility
@@ -14,10 +15,11 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.Exception
+import java.util.*
 import java.util.logging.Logger
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
@@ -30,6 +32,9 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
     fun passwordEncrypt(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
+
+    @Autowired
+    private lateinit var roleRepository: RoleRepository
 
     @PersistenceContext
     private lateinit var session: EntityManager
@@ -67,23 +72,28 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
                 criteriaUpdate.set(root.get("phone"), user.phone)
 
             if (Utility.isNotNullOrEmpty(user.userPassword)) {
-                logger.info("brfore hash ${user.userPassword}")
                 user.userPassword = passwordEncrypt().encode(user.userPassword)
                 criteriaUpdate.set(root.get("userPassword"), user.userPassword)
-                logger.info("after hash ${user.userPassword}")
             }
 
             criteriaUpdate.set(root.get("isActive"), user.isActive)
-
 
             val equal = builder.equal(root.get<Int>("id"), user.id!!)
             criteriaUpdate.where(equal)
             session.createQuery(criteriaUpdate).executeUpdate()
             ResponseEntity.accepted().body(userRepository.getOne(user.id!!))
         } else {
-            user.userPassword = passwordEncrypt().encode(user.userPassword)
-            ResponseEntity.accepted().body(userRepository.save(user))
+            if (userRepository.findByEmail(user.email) != null)
+                throw Exception("Email ID in Use", Throwable("Email not found"))
+            else {
+                user.userPassword = passwordEncrypt().encode(user.userPassword)
+                ResponseEntity.accepted().body(userRepository.save(user))
+            }
         }
+    }
+
+    fun findByEmail(email: String): User? {
+        return userRepository.findByEmail(email)
     }
 
     fun findAllUserByName(name: String, pageNumber: Int = 1): ResponseEntity<HashMap<String, Any>> {
@@ -97,15 +107,18 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
         val user = userRepository.findByEmail(email)
         if (user == null) {
             logger.info("error user not found")
-            throw UsernameNotFoundException("No User found")
+            throw Exception("No User found", Throwable("User not found"))
         } else {
-            logger.info("user $user")
+
             val userDetails = org.springframework.security.core.userdetails.User(
                     user.email,
                     user.userPassword,
                     mapRole(user.role!!)
             )
             logger.info("user details $userDetails")
+
+            saveUser(User(user.id)) //update last access try date
+
             return userDetails
         }
 
@@ -113,6 +126,10 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
 
     private fun mapRole(role: UserRole): Collection<GrantedAuthority> {
         return arrayListOf(SimpleGrantedAuthority(role.roleName))
+    }
+
+    fun getAllRoles(): ResponseEntity<MutableList<UserRole>> {
+        return ResponseEntity.ok().body(roleRepository.findAll())
     }
 
 }
