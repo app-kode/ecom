@@ -33,7 +33,7 @@ data class User(
         var address: String = "",
 
         @Column(name = "is_active", nullable = false)
-        var isActive: Boolean = false,
+        var isActive: Boolean = true,
 
         @Temporal(TemporalType.DATE)
         @Column(name = "last_access_date")

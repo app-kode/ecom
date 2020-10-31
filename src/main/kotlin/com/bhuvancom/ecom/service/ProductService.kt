@@ -103,4 +103,10 @@ class ProductService {
             ResponseEntity.ok(it)
         }.orElse(ResponseEntity.notFound().build())
     }
+
+    fun getRandom(): ResponseEntity<HashMap<String, Any>> {
+        val page = PageRequest.of(0, PAGE_SIZE)
+        return ResponseEntity.ok(PagedData.getPagedData(productRepository.findRandom(page) as Page<Any>))
+
+    }
 }

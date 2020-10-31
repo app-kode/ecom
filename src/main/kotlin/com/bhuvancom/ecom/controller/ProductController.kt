@@ -2,16 +2,16 @@ package com.bhuvancom.ecom.controller
 
 import com.bhuvancom.ecom.model.Product
 import com.bhuvancom.ecom.service.ProductService
-import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.logging.Logger
 
 @RestController
 @CrossOrigin
 @RequestMapping("/product")
 class ProductController(private val productService: ProductService) {
 
-    private val logger = LoggerFactory.getLogger(ProductController::class.java.name)
+    private val logger = Logger.getLogger(ProductController::class.java.name)
 
     @PostMapping("/save")
     fun addProduct(@RequestBody product: Product): ResponseEntity<Product> {
@@ -53,6 +53,11 @@ class ProductController(private val productService: ProductService) {
     @GetMapping("/search")
     fun getProductBySearch(@RequestParam(name = "search", defaultValue = "") search: String = "", @RequestParam(name = "page", defaultValue = "1") page: Int = 1): ResponseEntity<HashMap<String, Any>> {
         return productService.getProductsByInfo(search, page)
+    }
+
+    @GetMapping("/random")
+    fun getRandomProduct(): ResponseEntity<HashMap<String, Any>> {
+        return productService.getRandom()
     }
 
 }

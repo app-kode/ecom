@@ -20,7 +20,7 @@ interface ProductRepository : JpaRepository<Product, Int> {
     //@Query("from Product where info like '%:info%' or price <= :price order by price")
     fun findAllByInfoContainingAndPriceLessThanEqualOrderByPrice(info: String, price: Double, page: Pageable): Page<Product>
 
-    //@Query(countQuery = "select count(*) from Products where info like '%?1%' and price <=?1",
-    //      nativeQuery = true, value = "select * from Products where info like '%?1%' and price <=?1")
-    //fun findByInfo(info: String, price: Double, page: Pageable): Page<Product>
+    @Query(countQuery = "select count(*) from Products",
+            nativeQuery = true, value = "select * from Products order by rand()")
+    fun findRandom(page: Pageable): Page<Product>
 }

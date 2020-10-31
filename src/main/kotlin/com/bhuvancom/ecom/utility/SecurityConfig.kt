@@ -35,13 +35,13 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         http.csrf().disable()
         http.formLogin().disable()
         http.logout().disable()
-        http.httpBasic { it ->
+        http.httpBasic {
             it.realmName("e-com")
         }
         http.authorizeRequests().antMatchers(
                 "/",
                 "/category/all",
-                "/product/all",
+                "/product/rand",
                 "/offers/all",
                 "/user/roles",
                 "/logout",
